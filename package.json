@@ -27,7 +27,6 @@
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
   ],
   "files": [
-    "lib/",
     "from-markdown.js",
     "index.js",
     "to-markdown.js"
