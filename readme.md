@@ -11,7 +11,7 @@
 Extension for [`mdast-util-from-markdown`][from-markdown] and/or
 [`mdast-util-to-markdown`][to-markdown] to support frontmatter in **[mdast][]**.
 When parsing (`from-markdown`), must be combined with
-[`micromark-extension-frontmatter`][extension-frontmatter].
+[`micromark-extension-frontmatter`][extension].
 
 You probably shouldn’t use this package directly, but instead use
 [`remark-frontmatter`][remark-frontmatter] with **[remark][]**.
@@ -42,13 +42,13 @@ And our script, `example.js`, looks as follows:
 var fs = require('fs')
 var fromMarkdown = require('mdast-util-from-markdown')
 var toMarkdown = require('mdast-util-to-markdown')
-var frontmatterSyntax = require('micromark-extension-frontmatter')
+var syntax = require('micromark-extension-frontmatter')
 var frontmatter = require('mdast-util-frontmatter')
 
 var doc = fs.readFileSync('example.md')
 
 var tree = fromMarkdown(doc, {
-  extensions: [frontmatterSyntax(['yaml', 'toml'])],
+  extensions: [syntax(['yaml', 'toml'])],
   mdastExtensions: [frontmatter.fromMarkdown(['yaml', 'toml'])]
 })
 
@@ -108,7 +108,7 @@ Options are the same as [`micromark-extension-frontmatter`][options].
     — remark plugin to support frontmatter
 *   [`micromark/micromark`][micromark]
     — the smallest commonmark-compliant markdown parser that exists
-*   [`micromark/micromark-extension-frontmatter`][extension-frontmatter]
+*   [`micromark/micromark-extension-frontmatter`][extension]
     — micromark extension to parse frontmatter
 *   [`syntax-tree/mdast-util-from-markdown`][from-markdown]
     — mdast parser using `micromark` to create mdast from markdown
@@ -181,6 +181,6 @@ abide by its terms.
 
 [micromark]: https://github.com/micromark/micromark
 
-[extension-frontmatter]: https://github.com/micromark/micromark-extension-frontmatter
+[extension]: https://github.com/micromark/micromark-extension-frontmatter
 
 [options]: https://github.com/micromark/micromark-extension-frontmatter#options
