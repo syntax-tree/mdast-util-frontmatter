@@ -33,7 +33,7 @@
     "to-markdown.js"
   ],
   "dependencies": {
-    "micromark-extension-frontmatter": "^0.1.0"
+    "micromark-extension-frontmatter": "^0.2.0"
   },
   "devDependencies": {
     "mdast-util-from-markdown": "^0.2.0",
