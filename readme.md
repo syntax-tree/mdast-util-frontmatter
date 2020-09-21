@@ -54,7 +54,7 @@ var tree = fromMarkdown(doc, {
 
 console.log(tree)
 
-var out = toMarkdown({extensions: [frontmatter.toMarkdown(['yaml', 'toml'])]})
+var out = toMarkdown(tree, {extensions: [frontmatter.toMarkdown(['yaml', 'toml'])]})
 
 console.log(out)
 ```
