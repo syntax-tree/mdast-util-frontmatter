@@ -35,7 +35,7 @@
     "micromark-extension-frontmatter": "^0.2.0"
   },
   "devDependencies": {
-    "mdast-util-from-markdown": "^0.6.0",
+    "mdast-util-from-markdown": "^0.7.0",
     "mdast-util-to-markdown": "^0.3.0",
     "nyc": "^15.0.0",
     "prettier": "^2.0.0",
