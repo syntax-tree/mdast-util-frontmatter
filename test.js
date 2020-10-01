@@ -283,7 +283,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'yaml', value: ''}]},
       {extensions: [frontmatter.toMarkdown()]}
     ),
-    '---\n---',
+    '---\n---\n',
     'should serialize empty yaml'
   )
 
@@ -292,7 +292,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'yaml', value: 'a\nb'}]},
       {extensions: [frontmatter.toMarkdown()]}
     ),
-    '---\na\nb\n---',
+    '---\na\nb\n---\n',
     'should support content in yaml'
   )
 
@@ -301,7 +301,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'yaml', value: 'a\n\nb'}]},
       {extensions: [frontmatter.toMarkdown()]}
     ),
-    '---\na\n\nb\n---',
+    '---\na\n\nb\n---\n',
     'should support blank lines in yaml'
   )
 
@@ -310,7 +310,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'toml', value: 'a\n\nb'}]},
       {extensions: [frontmatter.toMarkdown('toml')]}
     ),
-    '+++\na\n\nb\n+++',
+    '+++\na\n\nb\n+++\n',
     'should support blank lines in yaml'
   )
 
@@ -319,7 +319,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'custom', value: 'a\n\nb'}]},
       {extensions: [frontmatter.toMarkdown(custom)]}
     ),
-    '<<<\na\n\nb\n>>>',
+    '<<<\na\n\nb\n>>>\n',
     'should support a custom matter (1)'
   )
 
@@ -328,7 +328,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'json', value: 'a\n\nb'}]},
       {extensions: [frontmatter.toMarkdown(json)]}
     ),
-    '{\na\n\nb\n}',
+    '{\na\n\nb\n}\n',
     'should support a custom matter (2)'
   )
 
@@ -337,7 +337,7 @@ test('mdast -> markdown', function (t) {
       {type: 'root', children: [{type: 'text', value: '<<<\na\n\nb\n>>>'}]},
       {extensions: [frontmatter.toMarkdown(custom)]}
     ),
-    '\\<<<\na\n\nb\n\\>>>',
+    '\\<<<\na\n\nb\n\\>>>\n',
     'should escape what would otherwise be custom matter'
   )
 
