@@ -131,9 +131,9 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://img.shields.io/travis/syntax-tree/mdast-util-frontmatter.svg
+[build-badge]: https://github.com/syntax-tree/mdast-util-frontmatter/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/syntax-tree/mdast-util-frontmatter
+[build]: https://github.com/syntax-tree/mdast-util-frontmatter/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/mdast-util-frontmatter.svg
 
