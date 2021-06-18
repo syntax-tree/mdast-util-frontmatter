@@ -5,11 +5,11 @@ import {removePosition} from 'unist-util-remove-position'
 import frontmatter from 'micromark-extension-frontmatter'
 import {frontmatterFromMarkdown, frontmatterToMarkdown} from './index.js'
 
-var custom = {type: 'custom', marker: {open: '<', close: '>'}}
-var json = {type: 'json', fence: {open: '{', close: '}'}}
-var yamlAnywhere = {type: 'yaml', marker: '-', anywhere: true}
+const custom = {type: 'custom', marker: {open: '<', close: '>'}}
+const json = {type: 'json', fence: {open: '{', close: '}'}}
+const yamlAnywhere = {type: 'yaml', marker: '-', anywhere: true}
 
-test('markdown -> mdast', function (t) {
+test('markdown -> mdast', (t) => {
   t.deepEqual(
     removePosition(
       fromMarkdown('---', {
@@ -277,7 +277,7 @@ test('markdown -> mdast', function (t) {
   t.end()
 })
 
-test('mdast -> markdown', function (t) {
+test('mdast -> markdown', (t) => {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: ''}]},

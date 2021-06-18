@@ -1,15 +1,13 @@
 import matters from 'micromark-extension-frontmatter/lib/matters.js'
 
 export function frontmatterFromMarkdown(options) {
-  var settings = matters(options)
-  var length = settings.length
-  var index = -1
-  var enter = {}
-  var exit = {}
-  var matter
+  const settings = matters(options)
+  const enter = {}
+  const exit = {}
+  let index = -1
 
-  while (++index < length) {
-    matter = settings[index]
+  while (++index < settings.length) {
+    const matter = settings[index]
     enter[matter.type] = opener(matter)
     exit[matter.type] = close
     exit[matter.type + 'Value'] = value
@@ -27,7 +25,7 @@ function opener(matter) {
 }
 
 function close(token) {
-  var data = this.resume()
+  const data = this.resume()
   // Remove the initial and final eol.
   this.exit(token).value = data.replace(/^(\r?\n|\r)|(\r?\n|\r)$/g, '')
 }
@@ -38,15 +36,13 @@ function value(token) {
 }
 
 export function frontmatterToMarkdown(options) {
-  var unsafe = []
-  var handlers = {}
-  var settings = matters(options)
-  var length = settings.length
-  var index = -1
-  var matter
+  const unsafe = []
+  const handlers = {}
+  const settings = matters(options)
+  let index = -1
 
-  while (++index < length) {
-    matter = settings[index]
+  while (++index < settings.length) {
+    const matter = settings[index]
     handlers[matter.type] = handler(matter)
     unsafe.push({atBreak: true, character: fence(matter, 'open').charAt(0)})
   }
@@ -55,8 +51,8 @@ export function frontmatterToMarkdown(options) {
 }
 
 function handler(matter) {
-  var open = fence(matter, 'open')
-  var close = fence(matter, 'close')
+  const open = fence(matter, 'open')
+  const close = fence(matter, 'close')
 
   return handle
 
@@ -66,14 +62,9 @@ function handler(matter) {
 }
 
 function fence(matter, prop) {
-  var marker
-
-  if (matter.marker) {
-    marker = pick(matter.marker, prop)
-    return marker + marker + marker
-  }
-
-  return pick(matter.fence, prop)
+  return matter.marker
+    ? pick(matter.marker, prop).repeat(3)
+    : pick(matter.fence, prop)
 }
 
 function pick(schema, prop) {
