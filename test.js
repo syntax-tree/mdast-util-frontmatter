@@ -1,9 +1,9 @@
-var test = require('tape')
-var fromMarkdown = require('mdast-util-from-markdown')
-var toMarkdown = require('mdast-util-to-markdown')
-var removePosition = require('unist-util-remove-position')
-var syntax = require('micromark-extension-frontmatter')
-var frontmatter = require('.')
+import test from 'tape'
+import fromMarkdown from 'mdast-util-from-markdown'
+import toMarkdown from 'mdast-util-to-markdown'
+import {removePosition} from 'unist-util-remove-position'
+import frontmatter from 'micromark-extension-frontmatter'
+import {frontmatterFromMarkdown, frontmatterToMarkdown} from './index.js'
 
 var custom = {type: 'custom', marker: {open: '<', close: '>'}}
 var json = {type: 'json', fence: {open: '{', close: '}'}}
@@ -13,8 +13,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -25,8 +25,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -37,8 +37,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown(' ---\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -52,8 +52,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\n ---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -67,8 +67,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---  \n---\t ', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -79,8 +79,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('--- --\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -94,8 +94,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\n--- x', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -112,8 +112,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('----\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -127,8 +127,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\n----', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -142,8 +142,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('--\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -159,8 +159,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\n--', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -177,8 +177,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\na\nb\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -189,8 +189,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('---\na\n\nb\n---', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -201,8 +201,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('+++\na\n\nb\n+++', {
-        extensions: [syntax('toml')],
-        mdastExtensions: [frontmatter.fromMarkdown('toml')]
+        extensions: [frontmatter('toml')],
+        mdastExtensions: [frontmatterFromMarkdown('toml')]
       }),
       true
     ),
@@ -213,8 +213,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('<<<\na\n\nb\n>>>', {
-        extensions: [syntax(custom)],
-        mdastExtensions: [frontmatter.fromMarkdown(custom)]
+        extensions: [frontmatter(custom)],
+        mdastExtensions: [frontmatterFromMarkdown(custom)]
       }),
       true
     ),
@@ -225,8 +225,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('{\na\n\nb\n}', {
-        extensions: [syntax(json)],
-        mdastExtensions: [frontmatter.fromMarkdown(json)]
+        extensions: [frontmatter(json)],
+        mdastExtensions: [frontmatterFromMarkdown(json)]
       }),
       true
     ),
@@ -237,8 +237,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
-        extensions: [syntax()],
-        mdastExtensions: [frontmatter.fromMarkdown()]
+        extensions: [frontmatter()],
+        mdastExtensions: [frontmatterFromMarkdown()]
       }),
       true
     ),
@@ -258,8 +258,8 @@ test('markdown -> mdast', function (t) {
   t.deepEqual(
     removePosition(
       fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
-        extensions: [syntax(yamlAnywhere)],
-        mdastExtensions: [frontmatter.fromMarkdown(yamlAnywhere)]
+        extensions: [frontmatter(yamlAnywhere)],
+        mdastExtensions: [frontmatterFromMarkdown(yamlAnywhere)]
       }),
       true
     ),
@@ -281,7 +281,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: ''}]},
-      {extensions: [frontmatter.toMarkdown()]}
+      {extensions: [frontmatterToMarkdown()]}
     ),
     '---\n---\n',
     'should serialize empty yaml'
@@ -290,7 +290,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: 'a\nb'}]},
-      {extensions: [frontmatter.toMarkdown()]}
+      {extensions: [frontmatterToMarkdown()]}
     ),
     '---\na\nb\n---\n',
     'should support content in yaml'
@@ -299,7 +299,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: 'a\n\nb'}]},
-      {extensions: [frontmatter.toMarkdown()]}
+      {extensions: [frontmatterToMarkdown()]}
     ),
     '---\na\n\nb\n---\n',
     'should support blank lines in yaml'
@@ -308,7 +308,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'toml', value: 'a\n\nb'}]},
-      {extensions: [frontmatter.toMarkdown('toml')]}
+      {extensions: [frontmatterToMarkdown('toml')]}
     ),
     '+++\na\n\nb\n+++\n',
     'should support blank lines in yaml'
@@ -317,7 +317,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'custom', value: 'a\n\nb'}]},
-      {extensions: [frontmatter.toMarkdown(custom)]}
+      {extensions: [frontmatterToMarkdown(custom)]}
     ),
     '<<<\na\n\nb\n>>>\n',
     'should support a custom matter (1)'
@@ -326,7 +326,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'json', value: 'a\n\nb'}]},
-      {extensions: [frontmatter.toMarkdown(json)]}
+      {extensions: [frontmatterToMarkdown(json)]}
     ),
     '{\na\n\nb\n}\n',
     'should support a custom matter (2)'
@@ -335,7 +335,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'text', value: '<<<\na\n\nb\n>>>'}]},
-      {extensions: [frontmatter.toMarkdown(custom)]}
+      {extensions: [frontmatterToMarkdown(custom)]}
     ),
     '\\<<<\na\n\nb\n\\>>>\n',
     'should escape what would otherwise be custom matter'

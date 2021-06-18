@@ -18,6 +18,9 @@ You probably shouldn’t use this package directly, but instead use
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -85,13 +88,13 @@ title = "New Website"
 
 ## API
 
-### `frontmatter.fromMarkdown([options])`
+This package exports the following identifiers: `frontmatterFromMarkdown`,
+`frontmatterToMarkdown`.
+There is no default export.
 
-### `frontmatter.toMarkdown([options])`
+### `frontmatterFromMarkdown([options])`
 
-> Note: the separate extensions are also available at
-> `mdast-util-frontmatter/from-markdown` and
-> `mdast-util-frontmatter/to-markdown`.
+### `frontmatterToMarkdown([options])`
 
 Support frontmatter (YAML, TOML, and more).
 These functions can be called with options and return extensions, respectively
