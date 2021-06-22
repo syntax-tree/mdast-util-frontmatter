@@ -1,8 +1,8 @@
 import test from 'tape'
-import fromMarkdown from 'mdast-util-from-markdown'
-import toMarkdown from 'mdast-util-to-markdown'
+import {fromMarkdown} from 'mdast-util-from-markdown'
+import {toMarkdown} from 'mdast-util-to-markdown'
 import {removePosition} from 'unist-util-remove-position'
-import frontmatter from 'micromark-extension-frontmatter'
+import {frontmatter} from 'micromark-extension-frontmatter'
 import {frontmatterFromMarkdown, frontmatterToMarkdown} from './index.js'
 
 const custom = {type: 'custom', marker: {open: '<', close: '>'}}
