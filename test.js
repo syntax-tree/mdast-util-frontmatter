@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('./test-types')} TOML
+ */
+
 import test from 'tape'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'

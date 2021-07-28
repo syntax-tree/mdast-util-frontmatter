@@ -52,8 +52,9 @@ function opener(matter) {
 /** @type {FromMarkdownHandle} */
 function close(token) {
   const data = this.resume()
+  const node = /** @type {Literal} */ (this.exit(token))
   // Remove the initial and final eol.
-  this.exit(token).value = data.replace(/^(\r?\n|\r)|(\r?\n|\r)$/g, '')
+  node.value = data.replace(/^(\r?\n|\r)|(\r?\n|\r)$/g, '')
 }
 
 /** @type {FromMarkdownHandle} */
