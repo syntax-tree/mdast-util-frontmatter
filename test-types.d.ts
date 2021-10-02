@@ -1,10 +1,10 @@
 import {Literal} from 'mdast'
 
-interface TOML extends Literal {
+interface Toml extends Literal {
   type: 'toml'
 }
 
-interface JSON extends Literal {
+interface Json extends Literal {
   type: 'json'
 }
 
@@ -13,10 +13,9 @@ interface Custom extends Literal {
 }
 
 declare module 'mdast' {
-  // To do: this should be `FrontmatterMap`, which doesn’t exist yet.
-  interface BlockContentMap {
-    toml: TOML
+  interface FrontmatterContentMap {
+    toml: Toml
     custom: Custom
-    json: JSON
+    json: Json
   }
 }
