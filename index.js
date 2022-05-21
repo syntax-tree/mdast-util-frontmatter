@@ -14,6 +14,9 @@
 import {matters} from 'micromark-extension-frontmatter/matters.js'
 
 /**
+ * Function that can be called to get an extension for
+ * `mdast-util-from-markdown`.
+ *
  * @param {Options} [options]
  * @returns {FromMarkdownExtension}
  */
@@ -64,6 +67,9 @@ function value(token) {
 }
 
 /**
+ * Function that can be called to get an extension for
+ * `mdast-util-to-markdown`.
+ *
  * @param {Options} [options]
  * @returns {ToMarkdownExtension}
  */
