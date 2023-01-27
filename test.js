@@ -9,10 +9,19 @@ import {toMarkdown} from 'mdast-util-to-markdown'
 import {removePosition} from 'unist-util-remove-position'
 import {frontmatter} from 'micromark-extension-frontmatter'
 import {frontmatterFromMarkdown, frontmatterToMarkdown} from './index.js'
+import * as mod from './index.js'
 
 const custom = {type: 'custom', marker: {open: '<', close: '>'}}
 const json = {type: 'json', fence: {open: '{', close: '}'}}
 const yamlAnywhere = {type: 'yaml', marker: '-', anywhere: true}
+
+test('core', () => {
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['frontmatterFromMarkdown', 'frontmatterToMarkdown'],
+    'should expose the public api'
+  )
+})
 
 test('frontmatterFromMarkdown', () => {
   assert.deepEqual(
