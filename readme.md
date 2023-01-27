@@ -19,6 +19,10 @@
 *   [API](#api)
     *   [`frontmatterFromMarkdown(options?)`](#frontmatterfrommarkdownoptions)
     *   [`frontmatterToMarkdown(options?)`](#frontmattertomarkdownoptions)
+    *   [`Info`](#info)
+    *   [`Matter`](#matter)
+    *   [`Options`](#options)
+*   [Syntax](#syntax)
 *   [Syntax tree](#syntax-tree)
     *   [Nodes](#nodes)
     *   [Content model](#content-model)
@@ -30,28 +34,42 @@
 
 ## What is this?
 
-This package contains extensions that add support for the frontmatter syntax
-enabled by GitHub and many other places to
-[`mdast-util-from-markdown`][mdast-util-from-markdown] and
-[`mdast-util-to-markdown`][mdast-util-to-markdown].
+This package contains two extensions that add support for frontmatter syntax
+as often used in markdown to [mdast][].
+These extensions plug into
+[`mdast-util-from-markdown`][mdast-util-from-markdown] (to support parsing
+frontmatter in markdown into a syntax tree) and
+[`mdast-util-to-markdown`][mdast-util-to-markdown] (to support serializing
+frontmatter in syntax trees to markdown).
 
-Frontmatter is a metadata format in front of content.
+Frontmatter is a metadata format in front of the content.
 It’s typically written in YAML and is often used with markdown.
 Frontmatter does not work everywhere so it makes markdown less portable.
 
+These extensions follow how GitHub handles frontmatter.
+GitHub only supports YAML frontmatter, but these extensions also support
+different flavors (such as TOML).
+
 ## When to use this
 
-These tools are all rather low-level.
-In most cases, you’d want to use [`remark-frontmatter`][remark-frontmatter] with
-remark instead.
+You can use these extensions when you are working with
+`mdast-util-from-markdown` and `mdast-util-to-markdown` already.
 
-When working with `mdast-util-from-markdown`, you must combine this package with
-[`micromark-extension-frontmatter`][extension].
+When working with `mdast-util-from-markdown`, you must combine this package
+with [`micromark-extension-frontmatter`][micromark-extension-frontmatter].
+
+When you don’t need a syntax tree, you can use [`micromark`][micromark]
+directly with
+[`micromark-extension-frontmatter`][micromark-extension-frontmatter].
+
+All these packages are used [`remark-frontmatter`][remark-frontmatter], which
+focusses on making it easier to transform content by abstracting these
+internals away.
 
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install mdast-util-frontmatter
@@ -132,29 +150,64 @@ title = "New Website"
 
 ## API
 
-This package exports the identifiers `frontmatterFromMarkdown` and
-`frontmatterToMarkdown`.
+This package exports the identifiers
+[`frontmatterFromMarkdown`][api-frontmatterfrommarkdown] and
+[`frontmatterToMarkdown`][api-frontmattertomarkdown].
 There is no default export.
 
 ### `frontmatterFromMarkdown(options?)`
 
-Function that can be called to get an extension for
+Create an extension for
 [`mdast-util-from-markdown`][mdast-util-from-markdown].
 
-###### `options`
+###### Parameters
 
-Configuration (optional).
-Same as [`micromark-extension-frontmatter`][options].
+*   `options` ([`Options`][api-options], optional)
+    — configuration
+
+###### Returns
+
+Extension for `mdast-util-from-markdown`
+([`FromMarkdownExtension`][frommarkdownextension]).
 
 ### `frontmatterToMarkdown(options?)`
 
-Function that can be called to get an extension for
+Create an extension for
 [`mdast-util-to-markdown`][mdast-util-to-markdown].
 
-###### `options`
+###### Parameters
 
-Configuration (optional).
-Same as [`micromark-extension-frontmatter`][options].
+*   `options` ([`Options`][api-options], optional)
+    — configuration
+
+###### Returns
+
+Extension for `mdast-util-to-markdown`
+([`ToMarkdownExtension`][tomarkdownextension]).
+
+### `Info`
+
+Structure of marker or fence (TypeScript type).
+
+<!-- To do: fix link when `info` is documented -->
+
+Same as [`Info` from `micromark-extension-frontmatter`][matter].
+
+### `Matter`
+
+Structure of matter (TypeScript type).
+
+Same as [`Matter` from `micromark-extension-frontmatter`][matter].
+
+### `Options`
+
+Configuration (TypeScript type).
+
+Same as [`Options` from `micromark-extension-frontmatter`][options].
+
+## Syntax
+
+See [Syntax in `micromark-extension-frontmatter`][syntax].
 
 ## Syntax tree
 
@@ -173,11 +226,11 @@ interface YAML <: Literal {
 }
 ```
 
-**YAML** ([**Literal**][dfn-literal]) represents a collection of metadata for
-the document in the YAML data serialisation language.
+**YAML** (**[Literal][dfn-literal]**) represents a collection of metadata for
+the document in the YAML data serialization language.
 
-**YAML** can be used where [**frontmatter**][dfn-frontmatter-content] content is
-expected.
+**YAML** can be used where **[frontmatter][dfn-frontmatter-content]** content
+is expected.
 Its content is represented by its `value` field.
 
 For example, the following markdown:
@@ -205,7 +258,7 @@ type FrontmatterContent = YAML
 **Frontmatter** content represent out-of-band information about the document.
 
 If frontmatter is present, it must be limited to one node in the
-[*tree*][term-tree], and can only exist as a [*head*][term-head].
+*[tree][term-tree]*, and can only exist as a *[head][term-head]*.
 
 #### `FlowContent` (frontmatter)
 
@@ -216,7 +269,8 @@ type FlowContentFrontmatter = FrontmatterContent | FlowContent
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `Options`, `Matter`, and `Info`.
+It exports the additional types [`Info`][api-info], [`Matter`][api-matter],
+and [`Options`][api-options].
 
 The YAML node type is supported in `@types/mdast` by default.
 To add other node types, register them by adding them to
@@ -225,14 +279,14 @@ To add other node types, register them by adding them to
 ```ts
 import type {Literal} from 'mdast'
 
-interface TOML extends Literal {
+interface Toml extends Literal {
   type: 'toml'
 }
 
 declare module 'mdast' {
   interface FrontmatterContentMap {
     // Allow using TOML nodes defined by `mdast-util-frontmatter`.
-    toml: TOML
+    toml: Toml
   }
 }
 ```
@@ -241,17 +295,17 @@ declare module 'mdast' {
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
-This plugin works with `mdast-util-from-markdown` version 1+ and
+These extensions works with `mdast-util-from-markdown` version 1+ and
 `mdast-util-to-markdown` version 1+.
 
 ## Related
 
-*   [`remarkjs/remark-frontmatter`][remark-frontmatter]
+*   [`remark-frontmatter`][remark-frontmatter]
     — remark plugin to support frontmatter
-*   [`micromark/micromark-extension-frontmatter`][extension]
+*   [`micromark-extension-frontmatter`][micromark-extension-frontmatter]
     — micromark extension to parse frontmatter
 
 ## Contribute
@@ -324,14 +378,34 @@ abide by its terms.
 
 [mdast-util-to-markdown]: https://github.com/syntax-tree/mdast-util-to-markdown
 
-[extension]: https://github.com/micromark/micromark-extension-frontmatter
+[micromark]: https://github.com/micromark/micromark
+
+[micromark-extension-frontmatter]: https://github.com/micromark/micromark-extension-frontmatter
 
 [options]: https://github.com/micromark/micromark-extension-frontmatter#options
 
-[dfn-literal]: https://github.com/syntax-tree/mdast#literal
+[matter]: https://github.com/micromark/micromark-extension-frontmatter#matter
 
-[dfn-frontmatter-content]: #frontmattercontent
+[syntax]: https://github.com/micromark/micromark-extension-frontmatter#syntax
+
+[dfn-literal]: https://github.com/syntax-tree/mdast#literal
 
 [term-tree]: https://github.com/syntax-tree/unist#tree
 
 [term-head]: https://github.com/syntax-tree/unist#head
+
+[frommarkdownextension]: https://github.com/syntax-tree/mdast-util-from-markdown#extension
+
+[tomarkdownextension]: https://github.com/syntax-tree/mdast-util-to-markdown#options
+
+[dfn-frontmatter-content]: #frontmattercontent
+
+[api-frontmatterfrommarkdown]: #frontmatterfrommarkdownoptions
+
+[api-frontmattertomarkdown]: #frontmattertomarkdownoptions
+
+[api-info]: #info
+
+[api-matter]: #matter
+
+[api-options]: #options
