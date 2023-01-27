@@ -1,10 +1,9 @@
 /**
  * @typedef {import('mdast').Literal} Literal
  * @typedef {import('mdast-util-from-markdown').Extension} FromMarkdownExtension
+ * @typedef {import('mdast-util-from-markdown').CompileContext} CompileContext
  * @typedef {import('mdast-util-from-markdown').Handle} FromMarkdownHandle
- * @typedef {import('mdast-util-to-markdown/lib/types.js').Options} ToMarkdownExtension
- * @typedef {import('mdast-util-to-markdown/lib/types.js').Handle} ToMarkdownHandle
- * @typedef {import('mdast-util-to-markdown/lib/util/indent-lines.js').Map} Map
+ * @typedef {import('mdast-util-to-markdown').Options} ToMarkdownExtension
  *
  * @typedef {import('micromark-extension-frontmatter/matters.js').Options} Options
  * @typedef {import('micromark-extension-frontmatter/matters.js').Matter} Matter
@@ -14,13 +13,16 @@
 import {matters} from 'micromark-extension-frontmatter/matters.js'
 
 /**
- * Function that can be called to get an extension for
- * `mdast-util-from-markdown`.
+ * Create an extension for `mdast-util-from-markdown`.
  *
- * @param {Options} [options]
+ * @param {Options | null | undefined} [options]
+ *   Configuration.
  * @returns {FromMarkdownExtension}
+ *   Extension for `mdast-util-from-markdown`.
  */
 export function frontmatterFromMarkdown(options) {
+  // @ts-expect-error: `micromark-extension-frontmatter` should fix types to
+  // accept `null` as options.
   const settings = matters(options)
   /** @type {FromMarkdownExtension['enter']} */
   const enter = {}
@@ -44,7 +46,11 @@ export function frontmatterFromMarkdown(options) {
  */
 function opener(matter) {
   return open
-  /** @type {FromMarkdownHandle} */
+
+  /**
+   * @this {CompileContext}
+   * @type {FromMarkdownHandle}
+   */
   function open(token) {
     // @ts-expect-error: custom.
     this.enter({type: matter.type, value: ''}, token)
@@ -52,7 +58,10 @@ function opener(matter) {
   }
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function close(token) {
   const data = this.resume()
   const node = /** @type {Literal} */ (this.exit(token))
@@ -60,30 +69,42 @@ function close(token) {
   node.value = data.replace(/^(\r?\n|\r)|(\r?\n|\r)$/g, '')
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function value(token) {
   this.config.enter.data.call(this, token)
   this.config.exit.data.call(this, token)
 }
 
 /**
- * Function that can be called to get an extension for
- * `mdast-util-to-markdown`.
+ * Create an extension for `mdast-util-to-markdown`.
  *
- * @param {Options} [options]
+ * @param {Options | null | undefined} [options]
+ *   Configuration.
  * @returns {ToMarkdownExtension}
+ *   Extension for `mdast-util-to-markdown`.
  */
 export function frontmatterToMarkdown(options) {
+  // To do: use an extension object with `satisfies` later.
   /** @type {ToMarkdownExtension['unsafe']} */
   const unsafe = []
   /** @type {ToMarkdownExtension['handlers']} */
   const handlers = {}
+  // @ts-expect-error: `micromark-extension-frontmatter` should fix types to
+  // accept `null` as options.
   const settings = matters(options)
   let index = -1
 
   while (++index < settings.length) {
     const matter = settings[index]
+
+    // @ts-expect-error: this can add custom frontmatter nodes.
+    // Typing those is the responsibility of the end user.
     handlers[matter.type] = handler(matter)
+
+    // To do: idea: perhaps make this smarter, with an `after` of the second char?
     unsafe.push({atBreak: true, character: fence(matter, 'open').charAt(0)})
   }
 
@@ -91,8 +112,12 @@ export function frontmatterToMarkdown(options) {
 }
 
 /**
+ * Create a handle that can serialize a frontmatter node as markdown.
+ *
  * @param {Matter} matter
+ *   Structure.
  * @returns {(node: Literal) => string} enter
+ *   Handler.
  */
 function handler(matter) {
   const open = fence(matter, 'open')
@@ -101,8 +126,12 @@ function handler(matter) {
   return handle
 
   /**
-   * @type {ToMarkdownHandle}
+   * Serialize a frontmatter node as markdown.
+   *
    * @param {Literal} node
+   *   Node to serialize.
+   * @returns {string}
+   *   Serialized node.
    */
   function handle(node) {
     return open + (node.value ? '\n' + node.value : '') + '\n' + close
@@ -110,9 +139,14 @@ function handler(matter) {
 }
 
 /**
+ * Get an `open` or `close` fence.
+ *
  * @param {Matter} matter
- * @param {'open'|'close'} prop
+ *   Structure.
+ * @param {'open' | 'close'} prop
+ *   Field to get.
  * @returns {string}
+ *   Fence.
  */
 function fence(matter, prop) {
   return matter.marker
@@ -122,9 +156,15 @@ function fence(matter, prop) {
 }
 
 /**
- * @param {Info|string} schema
- * @param {'open'|'close'} prop
+ * Take `open` or `close` fields when schema is an info object, or use the
+ * given value when it is a string.
+ *
+ * @param {Info | string} schema
+ *   Info object or value.
+ * @param {'open' | 'close'} prop
+ *   Field to get.
  * @returns {string}
+ *   Thing to use for the opening or closing.
  */
 function pick(schema, prop) {
   return typeof schema === 'string' ? schema : schema[prop]
