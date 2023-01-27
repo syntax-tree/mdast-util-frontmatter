@@ -2,7 +2,8 @@
  * @typedef {import('./test-types.js')} DoNotTouchThisIncludesCustomNodesInTree
  */
 
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'
 import {removePosition} from 'unist-util-remove-position'
@@ -13,8 +14,8 @@ const custom = {type: 'custom', marker: {open: '<', close: '>'}}
 const json = {type: 'json', fence: {open: '{', close: '}'}}
 const yamlAnywhere = {type: 'yaml', marker: '-', anywhere: true}
 
-test('markdown -> mdast', (t) => {
-  t.deepEqual(
+test('frontmatterFromMarkdown', () => {
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---', {
         extensions: [frontmatter()],
@@ -26,7 +27,7 @@ test('markdown -> mdast', (t) => {
     'should not support a single yaml fence (thematic break)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\n---', {
         extensions: [frontmatter()],
@@ -38,7 +39,7 @@ test('markdown -> mdast', (t) => {
     'should parse empty yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown(' ---\n---', {
         extensions: [frontmatter()],
@@ -53,7 +54,7 @@ test('markdown -> mdast', (t) => {
     'should not support a prefix (indent) before a yaml opening fence'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\n ---', {
         extensions: [frontmatter()],
@@ -68,7 +69,7 @@ test('markdown -> mdast', (t) => {
     'should not support a prefix (indent) before a yaml closing fence'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---  \n---\t ', {
         extensions: [frontmatter()],
@@ -80,7 +81,7 @@ test('markdown -> mdast', (t) => {
     'should parse an arbitrary suffix after the opening and closing fence of yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('--- --\n---', {
         extensions: [frontmatter()],
@@ -95,7 +96,7 @@ test('markdown -> mdast', (t) => {
     'should not support other characters after the suffix on the opening fence of yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\n--- x', {
         extensions: [frontmatter()],
@@ -113,7 +114,7 @@ test('markdown -> mdast', (t) => {
     'should not support other characters after the suffix on the closing fence of yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('----\n---', {
         extensions: [frontmatter()],
@@ -128,7 +129,7 @@ test('markdown -> mdast', (t) => {
     'should not support an opening yaml fence of more than 3 characters'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\n----', {
         extensions: [frontmatter()],
@@ -143,7 +144,7 @@ test('markdown -> mdast', (t) => {
     'should not support a closing yaml fence of more than 3 characters'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('--\n---', {
         extensions: [frontmatter()],
@@ -160,7 +161,7 @@ test('markdown -> mdast', (t) => {
     'should not support an opening yaml fence of less than 3 characters'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\n--', {
         extensions: [frontmatter()],
@@ -178,7 +179,7 @@ test('markdown -> mdast', (t) => {
     'should not support a closing yaml fence of less than 3 characters'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\na\nb\n---', {
         extensions: [frontmatter()],
@@ -190,7 +191,7 @@ test('markdown -> mdast', (t) => {
     'should support content in yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('---\na\n\nb\n---', {
         extensions: [frontmatter()],
@@ -202,7 +203,7 @@ test('markdown -> mdast', (t) => {
     'should support blank lines in yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('+++\na\n\nb\n+++', {
         extensions: [frontmatter('toml')],
@@ -214,7 +215,7 @@ test('markdown -> mdast', (t) => {
     'should support toml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('<<<\na\n\nb\n>>>', {
         extensions: [frontmatter(custom)],
@@ -226,7 +227,7 @@ test('markdown -> mdast', (t) => {
     'should support a custom matter (1)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('{\na\n\nb\n}', {
         extensions: [frontmatter(json)],
@@ -238,7 +239,7 @@ test('markdown -> mdast', (t) => {
     'should support a custom matter (2)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
         extensions: [frontmatter()],
@@ -259,7 +260,7 @@ test('markdown -> mdast', (t) => {
     'should not support yaml frontmatter in the middle'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     removePosition(
       fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
         extensions: [frontmatter(yamlAnywhere)],
@@ -277,12 +278,10 @@ test('markdown -> mdast', (t) => {
     },
     'should not support custom matters in the middle'
   )
-
-  t.end()
 })
 
-test('mdast -> markdown', (t) => {
-  t.deepEqual(
+test('frontmatterToMarkdown', () => {
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: ''}]},
       {extensions: [frontmatterToMarkdown()]}
@@ -291,7 +290,7 @@ test('mdast -> markdown', (t) => {
     'should serialize empty yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: 'a\nb'}]},
       {extensions: [frontmatterToMarkdown()]}
@@ -300,7 +299,7 @@ test('mdast -> markdown', (t) => {
     'should support content in yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'yaml', value: 'a\n\nb'}]},
       {extensions: [frontmatterToMarkdown()]}
@@ -309,7 +308,7 @@ test('mdast -> markdown', (t) => {
     'should support blank lines in yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'toml', value: 'a\n\nb'}]},
       {extensions: [frontmatterToMarkdown('toml')]}
@@ -318,7 +317,7 @@ test('mdast -> markdown', (t) => {
     'should support blank lines in yaml'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'custom', value: 'a\n\nb'}]},
       {extensions: [frontmatterToMarkdown(custom)]}
@@ -327,7 +326,7 @@ test('mdast -> markdown', (t) => {
     'should support a custom matter (1)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'json', value: 'a\n\nb'}]},
       {extensions: [frontmatterToMarkdown(json)]}
@@ -336,7 +335,7 @@ test('mdast -> markdown', (t) => {
     'should support a custom matter (2)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'root', children: [{type: 'text', value: '<<<\na\n\nb\n>>>'}]},
       {extensions: [frontmatterToMarkdown(custom)]}
@@ -344,6 +343,4 @@ test('mdast -> markdown', (t) => {
     '\\<<<\na\n\nb\n\\>>>\n',
     'should escape what would otherwise be custom matter'
   )
-
-  t.end()
 })
