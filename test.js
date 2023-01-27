@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./test-types')} TOML
+ * @typedef {import('./test-types.js')} DoNotTouchThisIncludesCustomNodesInTree
  */
 
 import test from 'tape'
