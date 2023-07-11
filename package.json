@@ -1,6 +1,6 @@
 {
   "name": "mdast-util-frontmatter",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "mdast extension to parse and serialize frontmatter (YAML, TOML, etc)",
   "license": "MIT",
   "keywords": [

@@ -78,14 +78,14 @@ npm install mdast-util-frontmatter
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {frontmatterFromMarkdown, frontmatterToMarkdown} from 'https://esm.sh/mdast-util-frontmatter@1'
+import {frontmatterFromMarkdown, frontmatterToMarkdown} from 'https://esm.sh/mdast-util-frontmatter@2'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {frontmatterFromMarkdown, frontmatterToMarkdown} from 'https://esm.sh/mdast-util-frontmatter@1?bundle'
+  import {frontmatterFromMarkdown, frontmatterToMarkdown} from 'https://esm.sh/mdast-util-frontmatter@2?bundle'
 </script>
 ```
 
