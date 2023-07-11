@@ -17,9 +17,16 @@ interface Custom extends Literal {
 
 declare module 'mdast' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-  interface FrontmatterContentMap {
-    toml: Toml
+  interface RootContentMap {
     custom: Custom
     json: Json
+    toml: Toml
+  }
+
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface FrontmatterContentMap {
+    custom: Custom
+    json: Json
+    toml: Toml
   }
 }

@@ -24,38 +24,41 @@ test('core', () => {
 })
 
 test('frontmatterFromMarkdown', () => {
+  let tree = fromMarkdown('---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'thematicBreak'}]},
     'should not support a single yaml fence (thematic break)'
   )
 
+  tree = fromMarkdown('---\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'yaml', value: ''}]},
     'should parse empty yaml'
   )
 
+  tree = fromMarkdown(' ---\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown(' ---\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [{type: 'thematicBreak'}, {type: 'thematicBreak'}]
@@ -63,14 +66,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support a prefix (indent) before a yaml opening fence'
   )
 
+  tree = fromMarkdown('---\n ---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\n ---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [{type: 'thematicBreak'}, {type: 'thematicBreak'}]
@@ -78,26 +82,28 @@ test('frontmatterFromMarkdown', () => {
     'should not support a prefix (indent) before a yaml closing fence'
   )
 
+  tree = fromMarkdown('---  \n---\t ', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---  \n---\t ', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'yaml', value: ''}]},
     'should parse an arbitrary suffix after the opening and closing fence of yaml'
   )
 
+  tree = fromMarkdown('--- --\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('--- --\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [{type: 'thematicBreak'}, {type: 'thematicBreak'}]
@@ -105,14 +111,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support other characters after the suffix on the opening fence of yaml'
   )
 
+  tree = fromMarkdown('---\n--- x', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\n--- x', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [
@@ -123,14 +130,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support other characters after the suffix on the closing fence of yaml'
   )
 
+  tree = fromMarkdown('----\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('----\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [{type: 'thematicBreak'}, {type: 'thematicBreak'}]
@@ -138,14 +146,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support an opening yaml fence of more than 3 characters'
   )
 
+  tree = fromMarkdown('---\n----', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\n----', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [{type: 'thematicBreak'}, {type: 'thematicBreak'}]
@@ -153,14 +162,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support a closing yaml fence of more than 3 characters'
   )
 
+  tree = fromMarkdown('--\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('--\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [
@@ -170,14 +180,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support an opening yaml fence of less than 3 characters'
   )
 
+  tree = fromMarkdown('---\n--', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\n--', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [
@@ -188,74 +199,80 @@ test('frontmatterFromMarkdown', () => {
     'should not support a closing yaml fence of less than 3 characters'
   )
 
+  tree = fromMarkdown('---\na\nb\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\na\nb\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'yaml', value: 'a\nb'}]},
     'should support content in yaml'
   )
 
+  tree = fromMarkdown('---\na\n\nb\n---', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('---\na\n\nb\n---', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'yaml', value: 'a\n\nb'}]},
     'should support blank lines in yaml'
   )
 
+  tree = fromMarkdown('+++\na\n\nb\n+++', {
+    extensions: [frontmatter('toml')],
+    mdastExtensions: [frontmatterFromMarkdown('toml')]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('+++\na\n\nb\n+++', {
-        extensions: [frontmatter('toml')],
-        mdastExtensions: [frontmatterFromMarkdown('toml')]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'toml', value: 'a\n\nb'}]},
     'should support toml'
   )
 
+  tree = fromMarkdown('<<<\na\n\nb\n>>>', {
+    extensions: [frontmatter(custom)],
+    mdastExtensions: [frontmatterFromMarkdown(custom)]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('<<<\na\n\nb\n>>>', {
-        extensions: [frontmatter(custom)],
-        mdastExtensions: [frontmatterFromMarkdown(custom)]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'custom', value: 'a\n\nb'}]},
     'should support a custom matter (1)'
   )
 
+  tree = fromMarkdown('{\na\n\nb\n}', {
+    extensions: [frontmatter(json)],
+    mdastExtensions: [frontmatterFromMarkdown(json)]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('{\na\n\nb\n}', {
-        extensions: [frontmatter(json)],
-        mdastExtensions: [frontmatterFromMarkdown(json)]
-      }),
-      true
-    ),
+    tree,
     {type: 'root', children: [{type: 'json', value: 'a\n\nb'}]},
     'should support a custom matter (2)'
   )
 
+  tree = fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
+    extensions: [frontmatter()],
+    mdastExtensions: [frontmatterFromMarkdown()]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
-        extensions: [frontmatter()],
-        mdastExtensions: [frontmatterFromMarkdown()]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [
@@ -269,14 +286,15 @@ test('frontmatterFromMarkdown', () => {
     'should not support yaml frontmatter in the middle'
   )
 
+  tree = fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
+    extensions: [frontmatter(yamlAnywhere)],
+    mdastExtensions: [frontmatterFromMarkdown(yamlAnywhere)]
+  })
+
+  removePosition(tree, {force: true})
+
   assert.deepEqual(
-    removePosition(
-      fromMarkdown('# Hello\n---\na\n\nb\n---\n+++', {
-        extensions: [frontmatter(yamlAnywhere)],
-        mdastExtensions: [frontmatterFromMarkdown(yamlAnywhere)]
-      }),
-      true
-    ),
+    tree,
     {
       type: 'root',
       children: [
