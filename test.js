@@ -6,9 +6,12 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {frontmatter} from 'micromark-extension-frontmatter'
 import {fromMarkdown} from 'mdast-util-from-markdown'
+import {
+  frontmatterFromMarkdown,
+  frontmatterToMarkdown
+} from 'mdast-util-frontmatter'
 import {toMarkdown} from 'mdast-util-to-markdown'
 import {removePosition} from 'unist-util-remove-position'
-import {frontmatterFromMarkdown, frontmatterToMarkdown} from './index.js'
 
 const custom = {type: 'custom', marker: {open: '<', close: '>'}}
 const json = {type: 'json', fence: {open: '{', close: '}'}}
@@ -16,10 +19,10 @@ const yamlAnywhere = {type: 'yaml', marker: '-', anywhere: true}
 
 test('core', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
-      'frontmatterFromMarkdown',
-      'frontmatterToMarkdown'
-    ])
+    assert.deepEqual(
+      Object.keys(await import('mdast-util-frontmatter')).sort(),
+      ['frontmatterFromMarkdown', 'frontmatterToMarkdown']
+    )
   })
 })
 
