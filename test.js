@@ -340,6 +340,32 @@ test('frontmatterFromMarkdown', async function (t) {
       })
     }
   )
+
+  await t.test(
+    'should support regexp special characters as markers',
+    async function () {
+      const funky = {type: 'funky', marker: '*'}
+      const tree = fromMarkdown('***\na\n***\n\n*a', {
+        extensions: [frontmatter(funky)],
+        mdastExtensions: [frontmatterFromMarkdown(funky)]
+      })
+
+      removePosition(tree, {force: true})
+
+      assert.deepEqual(tree, {
+        type: 'root',
+        children: [
+          {type: 'funky', value: 'a'},
+          {type: 'paragraph', children: [{type: 'text', value: '*a'}]}
+        ]
+      })
+
+      assert.deepEqual(
+        toMarkdown(tree, {extensions: [frontmatterToMarkdown(funky)]}),
+        '***\na\n***\n\n\\*a\n'
+      )
+    }
+  )
 })
 
 test('frontmatterToMarkdown', async function (t) {
